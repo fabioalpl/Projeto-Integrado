@@ -1,14 +1,13 @@
 {
   "project_info": {
-    "project_number": "632457352218",
-    "firebase_url": "https://escolaconecta-d5112-default-rtdb.firebaseio.com",
-    "project_id": "escolaconecta-d5112",
-    "storage_bucket": "escolaconecta-d5112.appspot.com"
+    "project_number": "241448274072",
+    "project_id": "escolaconecta-745b5",
+    "storage_bucket": "escolaconecta-745b5.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:632457352218:android:e29bb81de9e2ccd6882da3",
+        "mobilesdk_app_id": "1:241448274072:android:7dec31bb944c1f777628ed",
         "android_client_info": {
           "package_name": "com.example.escolaconecta"
         }
@@ -16,26 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBxVevIhIuzTP2K_lp4AKKMdOUcH4_ihac"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:632457352218:android:8c2bd5705e2d3161882da3",
-        "android_client_info": {
-          "package_name": "com.google.firebase.example.fireeats"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyBxVevIhIuzTP2K_lp4AKKMdOUcH4_ihac"
+          "current_key": "AIzaSyDh82ruXaXn7UI6aRDkeu_Ddw-jLwvu45g"
         }
       ],
       "services": {

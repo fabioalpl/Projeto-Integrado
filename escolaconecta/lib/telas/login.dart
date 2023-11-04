@@ -18,11 +18,13 @@ class _LoginState extends State<Login> {
   final TextEditingController _controllerNome = TextEditingController();
   final TextEditingController _controllerEmail = TextEditingController();
   final TextEditingController _controllerSenha = TextEditingController();
+  final TextEditingController _controllerPerfil = TextEditingController();
   bool _cadastroUsuario = false;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   Uint8List? _arquivoImagemSelecionado;
+  String? dropdownValue = 'Selecione';
 
   @override
   void initState() {
@@ -61,6 +63,7 @@ class _LoginState extends State<Login> {
       await uploadTask.whenComplete(() async {
         final urlImagem = await uploadTask.snapshot.ref.getDownloadURL();
         usuario.urlImagem = urlImagem;
+        usuario.perfil = _controllerPerfil.text;
 
         final usuariosRef = _firestore.collection("usuarios");
         await usuariosRef.doc(usuario.idUsuario).set(usuario.toMap());
@@ -149,12 +152,20 @@ class _LoginState extends State<Login> {
                         visible: _cadastroUsuario,
                         child: _buildTextField("Nome", _controllerNome),
                       ),
-                      const SizedBox(height: 10),
+                      SizedBox(height: 10),
                       _buildTextField("Email", _controllerEmail),
-                      const SizedBox(height: 10),
+                      SizedBox(height: 10),
                       _buildTextField("Senha", _controllerSenha,
                           isPassword: true),
-                      const SizedBox(height: 20),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Visibility(
+                        visible: _cadastroUsuario,
+                        child:
+                            _buildComboBox(dropdownValue!, _controllerPerfil),
+                      ),
+                      SizedBox(height: 20),
                       _buildSubmitButton(),
                       Row(
                         children: [
@@ -220,6 +231,36 @@ class _LoginState extends State<Login> {
           suffixIcon:
               Icon(isPassword ? Icons.lock_outline : Icons.mail_outline),
         ),
+      ),
+    );
+  }
+
+  Widget _buildComboBox(
+    String dropdownValue,
+    TextEditingController controller,
+  ) {
+    List<String> list = ['Educador', 'Responsável'];
+    return Container(
+      color: Colors.white,
+      width: double.infinity,
+      child: DropdownMenu<String>(
+        controller: controller,
+        enableFilter: true,
+        selectedTrailingIcon: const Icon(Icons.search),
+        label: const Text('Você é?'),
+        dropdownMenuEntries:
+            list.map<DropdownMenuEntry<String>>((String value) {
+          return DropdownMenuEntry<String>(value: value, label: value);
+        }).toList(),
+        inputDecorationTheme: const InputDecorationTheme(
+          filled: true,
+          contentPadding: EdgeInsets.symmetric(vertical: 5.0),
+        ),
+        onSelected: (String? value) {
+          setState(() {
+            dropdownValue = value!;
+          });
+        },
       ),
     );
   }

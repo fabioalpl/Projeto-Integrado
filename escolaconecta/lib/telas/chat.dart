@@ -1,3 +1,5 @@
+import 'package:escolaconecta/componentes/lista_contatos.dart';
+import 'package:escolaconecta/componentes/lista_conversas.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -16,7 +18,7 @@ class _ChatState extends State<Chat> {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: Text("Whats Escolar"),
+          title: Text("Chat Escolar"),
           backgroundColor: Colors.purple[100],
           actions: [
             IconButton(onPressed: () {}, icon: Icon(Icons.search)),
@@ -47,11 +49,19 @@ class _ChatState extends State<Chat> {
         body: SafeArea(
           child: TabBarView(
             children: [
-              Center(
+              /*Center(
                 child: Text("Conversas"),
-              ),
-              Center(
+              ),*/
+              /*Center(
                 child: Text("Contatos"),
+              ),*/
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8),
+                child: ListaConversas(),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8),
+                child: ListaContatos(),
               ),
             ],
           ),

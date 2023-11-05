@@ -1,7 +1,10 @@
+import 'package:escolaconecta/provider/conversa_provider.dart';
 import 'package:escolaconecta/rotas/rotas.dart';
 import 'package:escolaconecta/uteis/paleta_cores.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 final ThemeData temaPadrao = ThemeData(
   primaryColor: PaletaCores.corFundo,
@@ -30,12 +33,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      //home: Login(),
-      theme: temaPadrao,
-      initialRoute: "/",
-      onGenerateRoute: Rotas.gerarRota,
+    initializeDateFormatting('pt_BR', null);
+    return ChangeNotifierProvider(
+      create: (context) => ConversaProvider(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        //home: Login(),
+        theme: temaPadrao,
+        initialRoute: "/",
+        onGenerateRoute: Rotas.gerarRota,
+      ),
     );
   }
 }

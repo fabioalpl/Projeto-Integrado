@@ -1,0 +1,49 @@
+# Arquivos e diretórios gerados pelo Flutter
+/.dart_tool/
+/build/
+/ios/Pods/
+/android/build/
+/web/build/
+/web/.dart_tool/
+macos/Pods/
+.windows/
+
+# Cache do Flutter
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+.pubspec.lock
+
+# Dependências do Dart
+/packages/
+
+# Dependências do Android
+.android/
+android/key.properties
+android/app/debug.keystore
+
+# Dependências do iOS
+ios/Pods/
+ios/Podfile.lock
+ios/Flutter/ephemeral/.plugin_symlinks/
+
+# Arquivos de configuração
+*.iml
+*.lock
+*.log
+
+# Arquivos de compilação
+*.apk
+*.ap_
+
+# Dependências do Visual Studio Code
+.vscode/
+.idea/
+
+# Outros arquivos de configuração
+*.DS_Store
+*.metadata
+.DS_Store
+Thumbs.db

@@ -1,11 +1,13 @@
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:escolaconecta/modelos/usuario.dart';
+import 'package:escolaconecta/provider/conversa_provider.dart';
 import 'package:escolaconecta/uteis/paleta_cores.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -67,6 +69,7 @@ class _LoginState extends State<Login> {
 
         final usuariosRef = _firestore.collection("usuarios");
         await usuariosRef.doc(usuario.idUsuario).set(usuario.toMap());
+        context.read<ConversaProvider>().usuarioLogado = usuario;
         Navigator.pushReplacementNamed(context, "/home");
       });
     }

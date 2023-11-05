@@ -1,4 +1,6 @@
 import 'package:escolaconecta/modelos/usuario.dart';
+import 'package:escolaconecta/telas/atividades.dart';
+import 'package:escolaconecta/telas/calendario.dart';
 import 'package:escolaconecta/telas/chat.dart';
 import 'package:escolaconecta/telas/home.dart';
 import 'package:escolaconecta/telas/login.dart';
@@ -30,7 +32,11 @@ class Rotas {
         return MaterialPageRoute(builder: (_) => Mensagens(args as Usuario));
       case "/atividades":
         return MaterialPageRoute(
-          builder: (_) => Chat(),
+          builder: (_) => Calendario(),
+        );
+      case "/atividade":
+        return MaterialPageRoute(
+          builder: (_) => Atividades(),
         );
     }
 

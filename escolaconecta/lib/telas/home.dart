@@ -1,28 +1,33 @@
 import 'package:escolaconecta/modelos/usuario.dart';
-import 'package:escolaconecta/provider/conversa_provider.dart';
 import 'package:escolaconecta/uteis/paleta_cores.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class Home extends StatelessWidget {
-  const Home({super.key});
+  final Usuario? usuario;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  Home(this.usuario, {super.key});
 
   @override
   Widget build(BuildContext context) {
-    FirebaseAuth _auth = FirebaseAuth.instance;
-    Usuario? usuarioLogado = context.watch<ConversaProvider>().usuarioLogado;
     return Scaffold(
       backgroundColor: PaletaCores.corFundo,
       body: Center(
-        child: usuarioLogado != null
+        child: usuario != null
             ? Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Seja Bem vindo: " +
-                      usuarioLogado.nome +
-                      " " +
-                      usuarioLogado.perfil),
+                  Text(
+                    "Seja Bem vindo: " +
+                        usuario!.nome +
+                        " - " +
+                        usuario!.perfil,
+                    style: TextStyle(
+                      fontSize: 20.0, // Defina o tamanho da fonte desejado
+                      color: Colors.white, // Define a cor do texto como branca
+                    ),
+                  ),
                   SizedBox(height: 20),
                   GestureDetector(
                     onTap: () {
@@ -44,7 +49,7 @@ class Home extends StatelessWidget {
             : Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Por favor realize o login novamente!"),
+                  Text("O login falhou, favor realize o login novamente!"),
                   IconButton(
                       onPressed: () async {
                         await _auth.signOut();

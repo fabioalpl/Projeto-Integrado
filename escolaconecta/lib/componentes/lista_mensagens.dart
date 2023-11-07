@@ -57,7 +57,7 @@ class _ListaMensagensState extends State<ListaMensagens> {
       _salvarMensagem(idUsuarioDestinatario, idUsuarioRemetente, mensagem);
       Conversa conversaDestinatario = Conversa(
         idUsuarioDestinatario,
-        idUsuarioDestinatario,
+        idUsuarioRemetente,
         mensagem.texto,
         _usuarioRemetente.nome,
         _usuarioRemetente.email,

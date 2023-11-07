@@ -1,8 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:escolaconecta/modelos/atividade.dart';
-import 'package:escolaconecta/modelos/usuario.dart';
-import 'package:escolaconecta/uteis/paleta_cores.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
@@ -26,13 +24,16 @@ class _ListaAtividadesState extends State<ListaAtividades> {
     for (DocumentSnapshot item in querySnapshot.docs) {
       String idUsuario = item["idUsuario"];
       if (idUsuario == _idUsuarioLogado) {
+        String idResponsavel = item["idResponsavel"];
         String data = item["data"];
         String hora = item["hora"];
         String descricao = item["descricao"];
+        String latitude = item["latitude"];
+        String longitude = item["longitude"];
         bool aceita = item["aceita"] == "Sim" ? true : false;
 
-        Atividade atividade =
-            Atividade(idUsuario, data, hora, descricao, aceita);
+        Atividade atividade = Atividade(idUsuario, idResponsavel, data, hora,
+            descricao, latitude, longitude, aceita);
         listaAtividades.add(atividade);
       }
     }

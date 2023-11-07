@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:escolaconecta/modelos/usuario.dart';
@@ -28,17 +29,32 @@ class _LoginState extends State<Login> {
   Uint8List? _arquivoImagemSelecionado;
   String? dropdownValue = 'Selecione';
 
-  @override
-  void initState() {
-    super.initState();
-    _verificarUsuarioLogado();
-  }
-
   void _verificarUsuarioLogado() async {
     final User? usuarioLogado = await _auth.currentUser;
 
     if (usuarioLogado != null) {
-      Navigator.pushReplacementNamed(context, "/home");
+      Usuario? usuarioCompleto =
+          await _recuperarUsuarioLogado(usuarioLogado.uid);
+      context.read<ConversaProvider>().usuarioLogado = usuarioCompleto;
+      Navigator.pushReplacementNamed(context, "/home",
+          arguments: usuarioCompleto);
+    }
+  }
+
+  FutureOr<Usuario?> _recuperarUsuarioLogado(String idUsuario) async {
+    final usuarioRef = _firestore.collection("usuarios");
+    //QuerySnapshot querySnapshot = await usuarioRef.get();
+    QuerySnapshot querySnapshot =
+        await usuarioRef.where('idUsuario', isEqualTo: idUsuario).get();
+
+    for (DocumentSnapshot item in querySnapshot.docs) {
+      String email = item["email"];
+      String nome = item["nome"];
+      String perfil = item["perfil"];
+      String urlImagem = item["urlImagem"];
+
+      return Usuario(idUsuario, nome, email,
+          urlImagem: urlImagem, perfil: perfil);
     }
   }
 
@@ -70,7 +86,7 @@ class _LoginState extends State<Login> {
         final usuariosRef = _firestore.collection("usuarios");
         await usuariosRef.doc(usuario.idUsuario).set(usuario.toMap());
         context.read<ConversaProvider>().usuarioLogado = usuario;
-        Navigator.pushReplacementNamed(context, "/home");
+        Navigator.pushReplacementNamed(context, "/home", arguments: usuario);
       });
     }
   }
@@ -112,9 +128,10 @@ class _LoginState extends State<Login> {
       try {
         final auth = await _auth.signInWithEmailAndPassword(
             email: email, password: senha);
-        Navigator.pushReplacementNamed(context, "/home");
+        _verificarUsuarioLogado();
       } catch (e) {
         print("Erro ao fazer login: $e");
+        Navigator.pushReplacementNamed(context, "/falha_login");
       }
     }
   }
@@ -133,6 +150,13 @@ class _LoginState extends State<Login> {
           child: SingleChildScrollView(
             child: Column(
               children: [
+                Text(
+                  "Escola Conecta",
+                  style: TextStyle(
+                    fontSize: 40.0, // Defina o tamanho da fonte desejado
+                    color: Colors.white, // Define a cor do texto como branca
+                  ),
+                ),
                 _cadastroUsuario
                     ? _buildImageWidget()
                     : _buildCircularImageWidget(),
@@ -216,8 +240,8 @@ class _LoginState extends State<Login> {
   Widget _buildCircularImageWidget() {
     return Image.asset(
       'lib/imagens/login.png',
-      width: 100,
-      height: 100,
+      width: 200,
+      height: 200,
     );
   }
 
@@ -242,10 +266,9 @@ class _LoginState extends State<Login> {
     String dropdownValue,
     TextEditingController controller,
   ) {
-    List<String> list = ['Educador', 'Responsável'];
+    List<String> list = ['Professor', 'Responsável'];
     return Container(
       color: Colors.white,
-      width: double.infinity,
       child: DropdownMenu<String>(
         controller: controller,
         enableFilter: true,

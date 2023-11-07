@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:escolaconecta/componentes/lista_mensagens.dart';
 import 'package:escolaconecta/modelos/usuario.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -17,18 +18,37 @@ class _MensagensState extends State<Mensagens> {
   late Usuario _usuarioRemetente;
   late Usuario _usuarioDestinatario;
   FirebaseAuth _auth = FirebaseAuth.instance;
+  FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  _recuperarDadosIniciais() {
+  _recuperarDadosIniciais() async {
     _usuarioDestinatario = widget.usuarioDestinatario;
 
     User? usuarioLogado = _auth.currentUser;
     if (usuarioLogado != null) {
       String idUsuario = usuarioLogado.uid;
-      String? nome = usuarioLogado.displayName ?? "";
+      _usuarioRemetente = (await _recuperarUsuarioLogado(idUsuario))!;
+      /*String? nome = usuarioLogado.displayName ?? "";
       String? email = usuarioLogado.email ?? "";
       String? urlImagem = usuarioLogado.photoURL ?? "";
 
-      _usuarioRemetente = Usuario(idUsuario, nome, email, urlImagem: urlImagem);
+      _usuarioRemetente = Usuario(idUsuario, nome, email, urlImagem: urlImagem);*/
+    }
+  }
+
+  Future<Usuario?> _recuperarUsuarioLogado(String idUsuario) async {
+    final usuarioRef = _firestore.collection("usuarios");
+    //QuerySnapshot querySnapshot = await usuarioRef.get();
+    QuerySnapshot querySnapshot =
+        await usuarioRef.where('idUsuario', isEqualTo: idUsuario).get();
+
+    for (DocumentSnapshot item in querySnapshot.docs) {
+      String email = item["email"];
+      String nome = item["nome"];
+      String perfil = item["perfil"];
+      String urlImagem = item["urlImagem"];
+
+      return Usuario(idUsuario, nome, email,
+          urlImagem: urlImagem, perfil: perfil);
     }
   }
 

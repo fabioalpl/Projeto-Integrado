@@ -1,3 +1,5 @@
+import 'package:escolaconecta/componentes/lista_responsaveis.dart';
+import 'package:escolaconecta/modelos/atividade.dart';
 import 'package:escolaconecta/modelos/usuario.dart';
 import 'package:escolaconecta/telas/atividades.dart';
 import 'package:escolaconecta/telas/calendario.dart';
@@ -22,7 +24,7 @@ class Rotas {
         );
       case "/home":
         return MaterialPageRoute(
-          builder: (_) => Home(),
+          builder: (_) => Home(args as Usuario),
         );
       case "/chat":
         return MaterialPageRoute(
@@ -36,7 +38,17 @@ class Rotas {
         );
       case "/atividade":
         return MaterialPageRoute(
-          builder: (_) => Atividades(),
+          builder: (context) {
+            ;
+            return Atividades(args as Atividade?, args as String?);
+          },
+        );
+      case "/lista_responsaveis":
+        return MaterialPageRoute(
+          builder: (context) {
+            ;
+            return ListaResponsaveis();
+          },
         );
     }
 

@@ -109,12 +109,8 @@ class _ListaConversasState extends State<ListaConversas> {
 
                     return ListTile(
                       onTap: () {
-                        //if( isMobile ){
                         Navigator.pushNamed(context, "/mensagens",
                             arguments: usuario);
-                        //}else{
-                        //context.read<ConversaProvider>().usuarioDestinatario = usuario;
-                        //}
                       },
                       leading: CircleAvatar(
                         radius: 25,

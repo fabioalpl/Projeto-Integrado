@@ -66,12 +66,6 @@ class _ChatState extends State<Chat> {
         body: SafeArea(
           child: TabBarView(
             children: [
-              /*Center(
-                child: Text("Conversas"),
-              ),*/
-              /*Center(
-                child: Text("Contatos"),
-              ),*/
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 8),
                 child: ListaConversas(),

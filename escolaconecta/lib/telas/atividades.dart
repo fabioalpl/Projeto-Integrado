@@ -265,7 +265,7 @@ class _AtividadesState extends State<Atividades> {
             child: Row(
               children: [
                 Text(
-                  usuarioLogado!.perfil + ": " + usuarioLogado!.nome,
+                  usuarioLogado.perfil + ": " + usuarioLogado.nome,
                   style: TextStyle(
                     fontSize: 20.0, // Defina o tamanho da fonte desejado
                     color: Colors.white, // Define a cor do texto como branca
@@ -346,7 +346,10 @@ class _AtividadesState extends State<Atividades> {
                     onTap: () {
                       _selectPositionToLocation(context);
                     },
-                    child: Icon(Icons.near_me),
+                    child: Icon(
+                      Icons.near_me,
+                      color: Colors.yellow,
+                    ),
                   ),
                   SizedBox(width: 10.0),
                   Expanded(
@@ -364,50 +367,43 @@ class _AtividadesState extends State<Atividades> {
               height: 100,
               decoration: BoxDecoration(color: Color(0xfffaf3f3))),
           SizedBox(height: 50.0),
-          Visibility(
-            visible: isPerfilEducador,
-            child: isPerfilEducador
-                ? Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          _salvarAtividadeAtual(usuarioLogado!.idUsuario);
-                        },
-                        child: Text('Confirmar'),
-                      ),
-                      SizedBox(
-                          width: 16.0), // Adiciona um espaço entre os botões
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.pushReplacementNamed(
-                              context, "/atividades");
-                        },
-                        child: Text('Cancelar'),
-                      ),
-                    ],
-                  )
-                : Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          _aprovarAtividadeAtual(usuarioLogado!.idUsuario);
-                        },
-                        child: Text('Aprovar'),
-                      ),
-                      SizedBox(
-                          width: 16.0), // Adiciona um espaço entre os botões
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.pushReplacementNamed(
-                              context, "/atividades");
-                        },
-                        child: Text('Reprovar'),
-                      ),
-                    ],
-                  ),
-          ),
+          isPerfilEducador
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        _salvarAtividadeAtual(usuarioLogado!.idUsuario);
+                      },
+                      child: Text('Confirmar'),
+                    ),
+                    SizedBox(width: 16.0), // Adiciona um espaço entre os botões
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pushReplacementNamed(context, "/atividades");
+                      },
+                      child: Text('Cancelar'),
+                    ),
+                  ],
+                )
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        _aprovarAtividadeAtual(usuarioLogado!.idUsuario);
+                      },
+                      child: Text('Aprovar'),
+                    ),
+                    SizedBox(width: 16.0), // Adiciona um espaço entre os botões
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pushReplacementNamed(context, "/atividades");
+                      },
+                      child: Text('Reprovar'),
+                    ),
+                  ],
+                ),
         ],
       ),
     );

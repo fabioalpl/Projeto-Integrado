@@ -10,7 +10,8 @@ import 'package:escolaconecta/telas/mensagens.dart';
 import 'package:flutter/material.dart';
 
 class Rotas {
-  static Route<dynamic> gerarRota(RouteSettings settings) {
+  static Route<dynamic> gerarRota(
+      BuildContext context, RouteSettings settings) {
     final args = settings.arguments;
 
     switch (settings.name) {
@@ -39,10 +40,10 @@ class Rotas {
       case "/atividade":
         return MaterialPageRoute(
           builder: (context) {
-            ;
-            return Atividades(args as Atividade?, args as String?);
+            return Atividades(args as Atividade);
           },
         );
+
       case "/lista_responsaveis":
         return MaterialPageRoute(
           builder: (context) {

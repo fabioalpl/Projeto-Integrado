@@ -8,16 +8,16 @@ class Atividade {
   String longitude;
   bool aceita;
 
-  Atividade(
-    this.idUsuario,
-    this.idResponsavel,
-    this.data,
-    this.hora,
-    this.descricao,
-    this.latitude,
-    this.longitude,
-    this.aceita,
-  );
+  Atividade({
+    required this.idResponsavel, // Tornar idResponsavel obrigatório
+    this.idUsuario = "",
+    this.data = "",
+    this.hora = "",
+    this.descricao = "",
+    this.latitude = "",
+    this.longitude = "",
+    this.aceita = false, // Valor padrão para aceita
+  });
 
   Map<String, dynamic> toMap() {
     Map<String, dynamic> map = {

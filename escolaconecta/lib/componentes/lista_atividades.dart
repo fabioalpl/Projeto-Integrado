@@ -32,8 +32,15 @@ class _ListaAtividadesState extends State<ListaAtividades> {
         String longitude = item["longitude"];
         bool aceita = item["aceita"] == "Sim" ? true : false;
 
-        Atividade atividade = Atividade(idUsuario, idResponsavel, data, hora,
-            descricao, latitude, longitude, aceita);
+        Atividade atividade = Atividade(
+            idUsuario: idUsuario,
+            idResponsavel: idResponsavel,
+            data: data,
+            hora: hora,
+            descricao: descricao,
+            latitude: latitude,
+            longitude: longitude,
+            aceita: aceita);
         listaAtividades.add(atividade);
       }
     }

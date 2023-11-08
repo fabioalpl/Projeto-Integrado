@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
         //home: Login(),
         theme: temaPadrao,
         initialRoute: "/",
-        onGenerateRoute: Rotas.gerarRota,
+        onGenerateRoute: (settings) => Rotas.gerarRota(context, settings),
       ),
     );
   }

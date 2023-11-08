@@ -2,8 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:escolaconecta/componentes/lista_mensagens.dart';
 import 'package:escolaconecta/modelos/usuario.dart';
+import 'package:escolaconecta/provider/conversa_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class Mensagens extends StatefulWidget {
   final Usuario usuarioDestinatario;
@@ -15,12 +17,12 @@ class Mensagens extends StatefulWidget {
 }
 
 class _MensagensState extends State<Mensagens> {
-  late Usuario _usuarioRemetente;
-  late Usuario _usuarioDestinatario;
+  //late Usuario _usuarioRemetente;
+  //Usuario _usuarioDestinatario = widget.usuarioDestinatario;
   FirebaseAuth _auth = FirebaseAuth.instance;
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  _recuperarDadosIniciais() async {
+  /*_recuperarDadosIniciais() async {
     _usuarioDestinatario = widget.usuarioDestinatario;
 
     User? usuarioLogado = _auth.currentUser;
@@ -33,9 +35,9 @@ class _MensagensState extends State<Mensagens> {
 
       _usuarioRemetente = Usuario(idUsuario, nome, email, urlImagem: urlImagem);*/
     }
-  }
+  }*/
 
-  Future<Usuario?> _recuperarUsuarioLogado(String idUsuario) async {
+  /*Future<Usuario?> _recuperarUsuarioLogado(String idUsuario) async {
     final usuarioRef = _firestore.collection("usuarios");
     //QuerySnapshot querySnapshot = await usuarioRef.get();
     QuerySnapshot querySnapshot =
@@ -50,16 +52,18 @@ class _MensagensState extends State<Mensagens> {
       return Usuario(idUsuario, nome, email,
           urlImagem: urlImagem, perfil: perfil);
     }
-  }
+  }*/
 
   @override
   void initState() {
     super.initState();
-    _recuperarDadosIniciais();
+    //_recuperarDadosIniciais();
   }
 
   @override
   Widget build(BuildContext context) {
+    Usuario? _usuarioRemetente =
+        context.watch<ConversaProvider>().usuarioLogado;
     return Scaffold(
       appBar: AppBar(
         title: Row(
@@ -67,14 +71,14 @@ class _MensagensState extends State<Mensagens> {
             CircleAvatar(
               radius: 25,
               backgroundColor: Colors.grey,
-              backgroundImage:
-                  CachedNetworkImageProvider(_usuarioDestinatario.urlImagem),
+              backgroundImage: CachedNetworkImageProvider(
+                  widget.usuarioDestinatario.urlImagem),
             ),
             SizedBox(
               width: 8,
             ),
             Text(
-              _usuarioDestinatario.nome,
+              widget.usuarioDestinatario.nome,
               style: TextStyle(color: Colors.black, fontSize: 16),
             )
           ],
@@ -83,8 +87,8 @@ class _MensagensState extends State<Mensagens> {
       ),
       body: SafeArea(
         child: ListaMensagens(
-          usuarioRemetente: _usuarioRemetente,
-          usuarioDestinatario: _usuarioDestinatario,
+          usuarioRemetente: _usuarioRemetente!,
+          usuarioDestinatario: widget.usuarioDestinatario,
         ),
       ),
     );

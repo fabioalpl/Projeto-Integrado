@@ -11,9 +11,8 @@ import 'package:geocoding/geocoding.dart';
 
 class Atividades extends StatefulWidget {
   final Atividade? atividade;
-  String? idResponsavel;
 
-  Atividades(this.atividade, this.idResponsavel, {Key? key}) : super(key: key);
+  Atividades(this.atividade, {Key? key}) : super(key: key);
 
   @override
   State<Atividades> createState() => _AtividadesState();
@@ -135,7 +134,7 @@ class _AtividadesState extends State<Atividades> {
   }
 
   inicializaCampos() async {
-    if (widget.atividade != null) {
+    if (widget.atividade != null && widget.atividade!.hora != "") {
       DateFormat format = DateFormat("dd/MM/yyyy");
       List<String> partesHora = widget.atividade!.hora.split(':');
       int hora = int.parse(partesHora[0]);
@@ -177,14 +176,21 @@ class _AtividadesState extends State<Atividades> {
     String descricao = _controllerDescricao.text;
     bool aceita = false;
 
-    Atividade atividade = Atividade(idUsuario, widget.idResponsavel!,
-        dataAtividade, horaAtividade, descricao, _latitude, _longitude, aceita);
+    Atividade atividade = Atividade(
+        idResponsavel: widget.atividade!.idResponsavel,
+        idUsuario: idUsuario,
+        data: dataAtividade,
+        hora: horaAtividade,
+        descricao: descricao,
+        latitude: _latitude,
+        longitude: _longitude,
+        aceita: aceita);
 
     _salvarAtividade(atividade);
   }
 
   _salvarAtividade(Atividade atividade) {
-    if (widget.atividade != null) {
+    if (widget.atividade != null && widget.atividade!.hora != "") {
       _firestore
           .collection("atividades")
           .doc(atividade.idUsuario)
@@ -199,6 +205,44 @@ class _AtividadesState extends State<Atividades> {
     AlertDialog(
       title: Text("Tarefa criada!"),
     );
+
+    Navigator.pushReplacementNamed(context, "/atividades");
+  }
+
+  _aprovarAtividadeAtual(String idUsuario) {
+    String dataAtividade = _controllerData.text;
+    String horaAtividade = _controllerHora.text;
+    String descricao = _controllerDescricao.text;
+    bool aceita = false;
+
+    Atividade atividade = Atividade(
+        idResponsavel: widget.atividade!.idResponsavel,
+        idUsuario: idUsuario,
+        data: dataAtividade,
+        hora: horaAtividade,
+        descricao: descricao,
+        latitude: _latitude,
+        longitude: _longitude,
+        aceita: aceita);
+
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    String atividadeID = atividade
+        .idUsuario; // Substitua pelo ID do documento da atividade que você deseja atualizar.
+    bool novoValorAceita = true; // Novo valor para o campo "aceita".
+
+    firestore.collection("atividades").doc(atividadeID).update({
+      "aceita": novoValorAceita,
+    }).then((value) {
+      print("Campo 'aceita' atualizado com sucesso!");
+    }).catchError((error) {
+      print("Erro ao atualizar campo 'aceita': $error");
+    });
+
+    AlertDialog(
+      title: Text("Tarefa atualizada!"),
+    );
+
+    Navigator.pushReplacementNamed(context, "/atividades");
   }
 
   @override
@@ -210,7 +254,7 @@ class _AtividadesState extends State<Atividades> {
   @override
   Widget build(BuildContext context) {
     Usuario? usuarioLogado = context.watch<ConversaProvider>().usuarioLogado;
-    bool isPerfilEducador = usuarioLogado!.perfil == "Educador";
+    bool isPerfilEducador = usuarioLogado!.perfil == "Professor";
     return Scaffold(
       backgroundColor: PaletaCores.corFundo,
       body: Column(
@@ -322,24 +366,47 @@ class _AtividadesState extends State<Atividades> {
           SizedBox(height: 50.0),
           Visibility(
             visible: isPerfilEducador,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                ElevatedButton(
-                  onPressed: () {
-                    _salvarAtividadeAtual(usuarioLogado!.idUsuario);
-                  },
-                  child: Text('Confirmar'),
-                ),
-                SizedBox(width: 16.0), // Adiciona um espaço entre os botões
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushReplacementNamed(context, "/atividades");
-                  },
-                  child: Text('Cancelar'),
-                ),
-              ],
-            ),
+            child: isPerfilEducador
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          _salvarAtividadeAtual(usuarioLogado!.idUsuario);
+                        },
+                        child: Text('Confirmar'),
+                      ),
+                      SizedBox(
+                          width: 16.0), // Adiciona um espaço entre os botões
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.pushReplacementNamed(
+                              context, "/atividades");
+                        },
+                        child: Text('Cancelar'),
+                      ),
+                    ],
+                  )
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          _aprovarAtividadeAtual(usuarioLogado!.idUsuario);
+                        },
+                        child: Text('Aprovar'),
+                      ),
+                      SizedBox(
+                          width: 16.0), // Adiciona um espaço entre os botões
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.pushReplacementNamed(
+                              context, "/atividades");
+                        },
+                        child: Text('Reprovar'),
+                      ),
+                    ],
+                  ),
           ),
         ],
       ),

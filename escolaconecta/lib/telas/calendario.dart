@@ -33,27 +33,37 @@ class _CalendarioState extends State<Calendario> {
   }
 
   Future<List<Atividade>> _recuperarAtividades() async {
+    String usuarioLogadoId = _auth.currentUser!.uid;
     final atividadeRef = _firestore.collection("atividades");
     QuerySnapshot querySnapshot = await atividadeRef.get();
+    await atividadeRef.where('idResponsavel', isEqualTo: usuarioLogadoId).get();
     List<Atividade> listaAtividades = [];
 
     for (DocumentSnapshot item in querySnapshot.docs) {
       String idUsuario = item["idUsuario"];
-      if (idUsuario == _auth.currentUser!.uid) {
-        String idResponsavel = item["idResponsavel"];
-        String data = item["data"];
-        String hora = item["hora"];
-        String descricao = item["descricao"];
-        String latitude = item["latitude"];
-        String longitude = item["longitude"];
-        bool aceita = item["aceita"] == "Sim" ? true : false;
+      String idResponsavel = item["idResponsavel"];
+      String data = item["data"];
+      String hora = item["hora"];
+      String descricao = item["descricao"];
+      String latitude = item["latitude"];
+      String longitude = item["longitude"];
+      bool aceita = item["aceita"] == "Sim" ? true : false;
 
-        await _recuperarImagemUsuario(idUsuario);
+      String idFoto =
+          usuarioLogadoId == idResponsavel ? idUsuario : idResponsavel;
 
-        Atividade atividade = Atividade(idUsuario, idResponsavel, data, hora,
-            descricao, latitude, longitude, aceita);
-        listaAtividades.add(atividade);
-      }
+      await _recuperarImagemUsuario(idFoto);
+
+      Atividade atividade = Atividade(
+          idUsuario: idUsuario,
+          idResponsavel: idResponsavel,
+          data: data,
+          hora: hora,
+          descricao: descricao,
+          latitude: latitude,
+          longitude: longitude,
+          aceita: aceita);
+      listaAtividades.add(atividade);
     }
 
     return listaAtividades;
@@ -118,7 +128,7 @@ class _CalendarioState extends State<Calendario> {
     final alturaAtividade = MediaQuery.of(context).size.height * 0.20;
 
     Usuario? usuarioLogado = context.watch<ConversaProvider>().usuarioLogado;
-    bool criaAtividade = usuarioLogado!.perfil == "Educador";
+    bool criaAtividade = usuarioLogado!.perfil == "Professor";
 
     return Scaffold(
       appBar: barraSuperior(usuarioLogado),
@@ -147,7 +157,7 @@ class _CalendarioState extends State<Calendario> {
         visible: criaAtividade,
         child: FloatingActionButton(
           onPressed: () {
-            Navigator.pushReplacementNamed(context, "/atividade",
+            Navigator.pushReplacementNamed(context, "/lista_responsaveis",
                 arguments: null);
           },
           child: const Icon(Icons.add),
